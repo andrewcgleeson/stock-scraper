@@ -1,2 +1,0 @@
-python-dotenv==0.19.2
-Scrapy==2.5.1
