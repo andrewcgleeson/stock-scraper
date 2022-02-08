@@ -8,18 +8,14 @@ class StocksSpider(scrapy.Spider):
     
     def start_requests(self):
         urls = [
-            os.getenv('url')
+            os.getenv('urls')
         ]
         for url in urls:
-
-
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        counter = 1
-        for row in response.xpath(f'//*[@id="maincontent"]/div[1]/div[2]/div[2]/div[1]/div/div/div[3]/table/tbody/tr[{counter}]'):
+        for row in response.xpath(f'//*[@id="maincontent"]/div[1]/div[2]/div[2]/div[1]/div/div/div[3]/table/tbody//tr'):
             yield {
                 'currency_name': row.xpath('td[1]/a/text()').get(),
                 'current_value': row.xpath('td[2]/bg-quote/text()').get(),
             }
-        counter += 1
