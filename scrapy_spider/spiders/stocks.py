@@ -21,6 +21,9 @@ class StocksSpider(scrapy.Spider):
         
         yield {
             'coin_name': extract_information('//*[@id="maincontent"]/div[1]/div[2]/div/div[2]/h1/text()'),
-            'current_price': extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/h2/bg-quote/text()'),
-            'day_change': extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote/text()')
+            'current_price': '$' + extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/h2/bg-quote/text()'),
+            'day_change': extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote/text()'),
+            'five_day_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[1]/td[2]/ul/li[1]/text()'),
+            'one_month_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[2]/td[2]/ul/li[1]/text()'),
+            'one_year_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[5]/td[2]/ul/li[1]/text()')
         }
