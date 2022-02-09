@@ -9,9 +9,8 @@ class StocksSpider(scrapy.Spider):
     start_urls = [os.getenv('urls')]
 
     def parse(self, response):
-        # coin_page_links = response.xpath('//main[@id="maincontent"]/div[1]/div[2]/div[2]/div[1]/div/div/div[3]/table/tbody//tr//a').attrib['href']
-        # yield from response.follow(coin_page_links, callback=self.parse_pages)
         for href in response.xpath('//main[@id="maincontent"]/div[1]/div[2]/div[2]/div[1]/div/div/div[3]/table/tbody//tr//a/@href'):
+            
             url=response.urljoin(href.extract())
             yield scrapy.Request(url, callback = self.parse_pages)
     
@@ -20,10 +19,10 @@ class StocksSpider(scrapy.Spider):
             return response.xpath(query).get()
         
         yield {
-            'coin_name': extract_information('//*[@id="maincontent"]/div[1]/div[2]/div/div[2]/h1/text()'),
-            'current_price': '$' + extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/h2/bg-quote/text()'),
-            'day_change': extract_information('//*[@id="maincontent"]/div[1]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote/text()'),
-            'five_day_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[1]/td[2]/ul/li[1]/text()'),
-            'one_month_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[2]/td[2]/ul/li[1]/text()'),
-            'one_year_change': extract_information('//*[@id="maincontent"]/div[6]/div[1]/div[1]/div[2]/table/tbody/tr[5]/td[2]/ul/li[1]/text()')
+            'coin_name': extract_information('//h1[@class="company__name"]/text()'),
+            'current_price': '$' + extract_information('//*[@id="maincontent"]//h2/bg-quote/text()'),
+            'day_change': extract_information('//span[@class="change--percent--q"]//bg-quote[1]/text()'),
+            'five_day_change': extract_information('//table/tbody/tr[1]/td[2]/ul/li[1]/text()'),
+            'one_month_change': extract_information('//table/tbody/tr[2]/td[2]/ul/li[1]/text()'),
+            'one_year_change': extract_information('//table/tbody/tr[5]/td[2]/ul/li[1]/text()')
         }
