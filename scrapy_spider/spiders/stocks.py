@@ -9,8 +9,7 @@ class StocksSpider(scrapy.Spider):
     start_urls = [os.getenv('urls')]
 
     def parse(self, response):
-        for href in response.xpath('//main[@id="maincontent"]/div[1]/div[2]/div[2]/div[1]/div/div/div[3]/table/tbody//tr//a/@href'):
-            
+        for href in response.xpath('//table/tbody//tr//a[@class="link"]/@href'):
             url=response.urljoin(href.extract())
             yield scrapy.Request(url, callback = self.parse_pages)
     
