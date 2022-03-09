@@ -1,8 +1,11 @@
 import scrapy
+from scrapy.crawler import CrawlerProcess
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
+from scrapy.mail import MailSender
+mailer = MailSender()
+mailer.send(to=[os.getenv('email')], subject="Crawl complete", body="Check the results")
 class StocksSpider(scrapy.Spider):
     name = "stocks"
     
@@ -25,3 +28,14 @@ class StocksSpider(scrapy.Spider):
             'one_month_change': extract_information('//table/tbody/tr[2]/td[2]/ul/li[1]/text()'),
             'one_year_change': extract_information('//table/tbody/tr[5]/td[2]/ul/li[1]/text()')
         }
+
+process = CrawlerProcess(settings={
+    "FEEDS": {
+        "stocks.json":{
+            "format":"json",
+        },
+    },
+})
+
+process.crawl(StocksSpider)
+process.start()
